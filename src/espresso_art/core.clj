@@ -50,8 +50,7 @@
         (println (str "Could not reweet " (:text tweet-json) ": " (.getMessage e)))))))
 
 (defn loop-iter []
-  (when-let [timeline (get-home-timeline @latest-tweet-id-read)]
-    (println (apply str (map :id timeline)))
+  (when-let [timeline (seq (get-home-timeline @latest-tweet-id-read))]
     (let [latest            (apply max (map :id timeline))
           tweets-to-retweet (filter should-retweet? timeline)]
       (println (str "Reading tweets from " @latest-tweet-id-read " to " latest))
