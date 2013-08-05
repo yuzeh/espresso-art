@@ -13,5 +13,5 @@ pom.xml.asc
 .idea/
 *.iml
 *.iws
-src/espresso_art/config.clj
+src/main/clj/espresso_art/config.clj
 latest-tweet-id-read
