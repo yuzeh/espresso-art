@@ -42,7 +42,11 @@
         full-params (if (pos? from-tweet-id)
                       (assoc base-params :since-id from-tweet-id)
                       base-params)]
-    (:body (statuses-home-timeline :oauth-creds my-creds :params full-params))))
+    (try
+      (:body (statuses-home-timeline :oauth-creds my-creds :params full-params))
+      (catch Exception e
+        (log/warnf e "Could not get home timeline!")
+        nil))))
 
 (defn get-user-timeline
   "Get the user timeline for a given user name."

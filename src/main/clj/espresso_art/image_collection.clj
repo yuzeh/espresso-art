@@ -15,28 +15,30 @@
 (defn start-enqueue-tweet-thread! [twitter-user image-url-buffer]
   (async/thread
     (loop [previous-id nil
-           since-id    nil]
-      (if (or (nil? since-id) (not= since-id previous-id))
-        (let [timeline          (get-user-timeline twitter-user since-id)
+           until-id    nil]
+      (if (or (nil? until-id) (not= until-id previous-id))
+        (let [since-id-search   (if-not (nil? until-id) (dec until-id))
+              timeline          (get-user-timeline twitter-user since-id-search)
               next-id           (min-id timeline)
               tweets-with-photo (filter contains-photo? timeline)]
           (doseq [tweet tweets-with-photo]
             (log/debugf "Getting photo for URL: %s" (get-photo-url tweet))
             (async/>!! image-url-buffer (get-photo-url tweet)))
-          (recur since-id next-id))
+          (recur until-id next-id))
         (async/close! image-url-buffer)))))
 
 (def espresso-button-group (button-group))
 
 (defn save-image [image-url local-path]
-  (with-open [stream (io/output-stream local-path)]
-    (.write stream (-> image-url
-                       (http/get {:as :byte-array})
-                       :body))))
+  (async/thread
+    (with-open [stream (io/output-stream local-path)]
+      (.write stream (-> image-url
+                         (http/get {:as :byte-array})
+                         :body)))))
 
 (defn display-image!
   [next-image widget]
-  (log/info next-image)
+  (log/debug next-image)
   (reset! current-image next-image)
   (config! widget :icon (icon next-image)))
 

@@ -23,9 +23,11 @@
       (spit file-name (str @latest-tweet-id-read)))))
 
 (defn -main [& args]
+  (log/info args)
   (let [[options arguments banner]
         (cli/cli args
-                 "Runs the server that powers @espresso_art's retweeting mechanisms."
+                 ;; Seriously, why the hell do I have to comment this out.
+                 ;; "Runs the server that powers @espresso_art's retweeting mechanisms."
                  ["-w" "--wait-time" "Time to wait between batches, in seconds"
                     :default 120 :parse-fn #(Integer. %)])
         wait-time (:wait-time options)]
