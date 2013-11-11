@@ -9,9 +9,9 @@
 (def latest-tweet-id-read (atom 0))
 
 (defn should-retweet? [tweet-json]
-  (every? identity ((juxt
-                      twitter/contains-hashtag-espresso?
-                      twitter/contains-photo?) tweet-json)))
+  (and (twitter/contains-photo? tweet-json)
+       (or (twitter/contains-hashtag-espresso? tweet-json)
+           (twitter/contains-espresso-text? tweet-json))))
 
 (defn loop-iter []
   (when-let [timeline (seq (twitter/get-home-timeline @latest-tweet-id-read))]

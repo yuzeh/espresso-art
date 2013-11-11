@@ -7,13 +7,23 @@
   (:require [clojure.string :as string]
             [clojure.tools.logging :as log]))
 
+(defn- tokenize-str [input-string]
+  (map #(.toLowerCase %) (re-seq #"\\w+" input-string)))
+
 (defn contains-hashtag-espresso?
   "Returns truthy if tweet JSON contains #espresso, nil otherwise."
   [tweet]
   (seq (some->> tweet
-         :entities
-         :hashtags
-         (filter #(= "espresso" (:text %))))))
+                :entities
+                :hashtags
+                (filter #(= "espresso" (:text %))))))
+
+(defn contains-espresso-text?
+  "Returns truthy iff tweet contains the token espresso."
+  [tweet]
+  (let [tokenized-string (->> tweet :text tokenize-str)]
+    (or (contains? tokenized-string "espresso")
+        (contains? tokenized-string "coffee"))))
 
 (defn contains-photo?
   "Returns truthy if tweet JSON has a photo, nil otherwise."
