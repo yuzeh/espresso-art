@@ -22,6 +22,7 @@
                  [twitter-api "0.7.4"]
 
                  ;; OpenCV
-                 [local/opencv "2.4.5"]
-                 [local/opencv-native "2.4.5"]]
+                 ;; [local/opencv "2.4.5"]
+                 ;; [local/opencv-native "2.4.5"]
+                ]
   :aot [espresso-art.server espresso-art.image-collection])
