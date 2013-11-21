@@ -21,7 +21,7 @@
 (defn contains-espresso-text?
   "Returns truthy iff tweet contains the token espresso."
   [tweet]
-  (let [tokenized-string (->> tweet :text tokenize-str)]
+  (let [tokenized-string (->> tweet :text tokenize-str (into #{}))]
     (or (contains? tokenized-string "espresso")
         (contains? tokenized-string "coffee"))))
 
